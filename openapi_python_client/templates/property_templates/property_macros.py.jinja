@@ -3,6 +3,7 @@
 {{ property.python_name }} = {{ construct_function(property, source) }}
 {% else %}{# Must be nullable OR non-required #}
 _{{ property.python_name }} = {{ source }}
+
 {{ property.python_name }}: {{ property.get_type_string() }}
     {% if property.nullable %}
 if _{{ property.python_name }} is None:
@@ -10,7 +11,7 @@ if _{{ property.python_name }} is None:
 
     {% endif %}
     {% if not property.required %}
-{% if property.nullable %}elif{% else %}if{% endif %} isinstance(_{{ property.python_name }},  Unset):
+{% if property.nullable %}elif{% else %}if{% endif %} isinstance(_{{ property.python_name }},  Unset) or _{{ property.python_name }} is None:
     {{ property.python_name }} = {% if initial_value != None %}{{ initial_value }}{% else %}UNSET{% endif %}
 
     {% endif %}
